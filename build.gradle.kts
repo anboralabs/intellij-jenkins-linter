@@ -18,7 +18,8 @@ kotlin {
 // Configure project's dependencies
 repositories {
     mavenCentral()
-
+    maven("https://repo.jenkins-ci.org/public/")
+    maven { url = uri("https://jitpack.io") }
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
     intellijPlatform {
         defaultRepositories()
@@ -36,10 +37,15 @@ dependencies {
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(properties("platformPlugins").map { it.split(',') })
 
-        instrumentationTools()
         pluginVerifier()
         // testFramework(TestFrameworkType.Platform.JUnit4)
     }
+    implementation("info.picocli:picocli:4.7.5")
+    implementation("commons-io:commons-io:2.18.0")
+    implementation("org.jenkins-ci:version-number:1.12")
+    implementation("io.jenkins.lib:support-log-formatter:1.2")
+    implementation("com.github.spotbugs:spotbugs-annotations:3.1.3")
+    implementation("com.github.dalgarins:plugin-installation-manager-tool:1.0.2")
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
@@ -63,7 +69,7 @@ intellijPlatform {
         channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 
-    verifyPlugin {
+    pluginVerification {
         ides {
             recommended()
         }
