@@ -45,7 +45,16 @@ dependencies {
     implementation("org.jenkins-ci:version-number:1.12")
     implementation("io.jenkins.lib:support-log-formatter:1.2")
     implementation("com.github.spotbugs:spotbugs-annotations:3.1.3")
-    implementation("com.github.dalgarins:plugin-installation-manager-tool:1.0.2")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
+    implementation("args4j:args4j:2.37")
+    implementation("org.assertj:assertj-core:3.27.2")
+    implementation("net.bytebuddy:byte-buddy:1.15.11")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
+    implementation("commons-validator:commons-validator:1.9.0")
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
+    implementation("commons-codec:commons-codec:1.17.1")
+    implementation("org.json:json:20241224")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html

@@ -1,10 +1,14 @@
 package co.anbora.labs.jenkins.linter.ide.tasks
 
 import co.anbora.labs.jenkins.linter.ide.notifications.LinterNotifications
+import co.anbora.labs.jenkins.linter.ide.toolchain.LinterLocalToolchain
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.util.io.HttpRequests
+import io.jenkins.tools.pluginmanager.config.Config
+import io.jenkins.tools.pluginmanager.impl.PluginManager
+import io.jenkins.tools.pluginmanager.util.PluginListParser
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -13,6 +17,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 import java.util.jar.JarFile
+import kotlin.io.path.pathString
 
 private const val TOTAL_WAR = 1265
 
@@ -33,6 +38,8 @@ class DownloadLinterTask(
                     request.connection.getContentLength().toLong()
                 )
                 this@DownloadLinterTask.uncompress(dlFilePath, explodeWarPath, progressIndicator)
+                this@DownloadLinterTask.installPlugins(dlFilePath, progressIndicator)
+                LinterNotifications.installSuccessNotification(project)
             }
         } catch (ex: Throwable) {
             LinterNotifications.errorDownloadToolsNotification(ex, project)
@@ -95,4 +102,22 @@ class DownloadLinterTask(
             }
         }
     }
+
+    @Throws(Throwable::class)
+    private fun installPlugins(dlFilePath: Path, progressIndicator: ProgressIndicator) {
+        val pluginParser = PluginListParser(false)
+
+        val config = Config.builder()
+            .withPluginDir(LinterLocalToolchain.stdPluginsDir().toFile())
+            .withJenkinsWar(dlFilePath.pathString)
+            .withPlugins(ArrayList(pluginParser.parsePluginsFromCliOption(arrayOf(LinterLocalToolchain.defaultPluginName()))))
+            .withDoDownload(true)
+            .withProgressIndicator(progressIndicator)
+            .build()
+
+        PluginManager(config).use { pluginManager ->
+            pluginManager.start()
+        }
+    }
+
 }

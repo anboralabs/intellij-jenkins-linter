@@ -44,6 +44,17 @@ object LinterNotifications {
     }
 
     @JvmStatic
+    fun installSuccessNotification(project: Project?) {
+        val notification = createLinterNotification(
+            PLUGIN_NAME,
+            "Linter installed.",
+            NotificationType.INFORMATION
+        )
+
+        showNotification(notification, project)
+    }
+
+    @JvmStatic
     fun errorDownloadToolsNotification(ex: Throwable, project: Project?) {
         val notification = createLinterNotification(
             PLUGIN_NAME,
