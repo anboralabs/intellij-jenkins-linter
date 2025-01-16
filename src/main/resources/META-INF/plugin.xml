@@ -1,5 +1,5 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
-<idea-plugin>
+<idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
     <id>co.anbora.labs.jenkinsfile.linter</id>
     <name>Jenkinsfile Linter Offline</name>
     <vendor email="support@anbora.co" url="https://labs.anbora.co">Anbora-labs</vendor>
@@ -16,6 +16,18 @@
         <postStartupActivity implementation="co.anbora.labs.jenkins.linter.ide.startup.SetupLinterStartup" />
         <notificationGroup id="JenkinsOfflineLinter_Notification" displayType="STICKY_BALLOON"/>
     </extensions>
+
+    <extensions defaultExtensionNs="co.anbora.labs.jenkinsfile.linter">
+        <elementFinder implementation="co.anbora.labs.jenkins.linter.ide.psiFinder.DefaultPsiElementFinder" />
+    </extensions>
+
+    <extensionPoints>
+        <extensionPoint interface="co.anbora.labs.jenkins.linter.ide.psiFinder.PsiFinderFlavor"
+                        dynamic="true" name="elementFinder"/>
+    </extensionPoints>
+
+    <xi:include href="linter.xml" />
+
     <actions>
         <action id="co.anbora.labs.jenkins.linter.ide.actions.BuyLicense"
                 class="co.anbora.labs.jenkins.linter.ide.actions.BuyLicense" text="Buy"/>

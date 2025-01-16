@@ -1,6 +1,8 @@
 package io.jenkins.jenkinsfile.runner.bootstrap.commands;
 
 import co.anbora.labs.jenkins.linter.ide.toolchain.LinterLocalToolchain;
+import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.openapi.extensions.PluginId;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -8,6 +10,7 @@ import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import io.jenkins.jenkinsfile.runner.bootstrap.IApp;
 import io.jenkins.jenkinsfile.runner.bootstrap.SideClassLoader;
 import io.jenkins.jenkinsfile.runner.bootstrap.Util;
+import io.jenkins.tools.pluginmanager.impl.PluginManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
@@ -25,6 +28,7 @@ import java.nio.file.Files;
 import java.security.PrivilegedActionException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -265,7 +269,8 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
      * @return Path to the app repo
      */
     public File getAppRepo() {
-        return new File(System.getProperty("app.repo"));
+        PluginId pluginId = PluginId.getId("co.anbora.labs.jenkinsfile.linter");
+        return Objects.requireNonNull(PluginManagerCore.getPlugin(pluginId)).getPluginPath().toFile();
     }
 
     /**
@@ -281,7 +286,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     }
 
     public File getSetupJarDir() throws IOException {
-        File setupJar = new File(getLibDirectory(), "setup/");
+        File setupJar = LinterLocalToolchain.INSTANCE.libSetupDir().toFile();
         if (!setupJar.exists()) {
             throw new IOException("Setup JAR is missing: " + setupJar);
         }
@@ -289,7 +294,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     }
 
     public File getPayloadJarDir() throws IOException {
-        File payloadJar = new File(getLibDirectory(), "payload/");
+        File payloadJar = LinterLocalToolchain.INSTANCE.libPayloadDir().toFile();
         if (!payloadJar.exists()) {
             throw new IOException("Payload JAR is missing: " + payloadJar);
         }

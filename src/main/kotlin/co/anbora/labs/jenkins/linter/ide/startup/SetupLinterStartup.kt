@@ -14,16 +14,12 @@ class SetupLinterStartup: ProjectActivity {
             LinterNotifications.supportNotification(project)
         }
 
-        if (!LinterLocalToolchain.isValid()) {
+        if (!LinterLocalToolchain.isValidSetup()) {
             LinterLocalToolchain.setup(project)
         }
 
-        if (LinterLocalToolchain.isValid() && !LinterLocalToolchain.hasWarDownloaded()) {
+        if (!LinterLocalToolchain.isValid()) {
             LinterNotifications.downloadLinterNotification(project)
-        }
-
-        if (LinterLocalToolchain.hasWarDownloaded() && !LinterLocalToolchain.isLinterPluginInstalled()) {
-            LinterNotifications.installPipelinePluginNotification(project)
         }
     }
 }

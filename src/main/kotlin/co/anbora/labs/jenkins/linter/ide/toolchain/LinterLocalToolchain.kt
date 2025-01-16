@@ -43,6 +43,10 @@ object LinterLocalToolchain: JenkinsLinterToolchain {
 
     override fun stdBinDir(): Path = libBinDir
 
+    override fun libSetupDir(): Path = setupDir
+
+    override fun libPayloadDir(): Path = payloadDir
+
     override fun rootDir(): Path = root
 
     override fun runnerDir(): Path = runner
@@ -54,6 +58,16 @@ object LinterLocalToolchain: JenkinsLinterToolchain {
     override fun defaultPluginName(): String = "pipeline-model-definition:2.2218.v56d0cda_37c72"
 
     override fun isValid(): Boolean {
+        return isValidDir(rootDir())
+                && isValidRunner()
+                && isValidDir(stdWarDir())
+                && isValidDir(stdExplodeDir())
+                && isValidDir(stdPluginsDir())
+                && hasWarDownloaded()
+                && isLinterPluginInstalled()
+    }
+
+    override fun isValidSetup(): Boolean {
         return isValidDir(rootDir())
                 && isValidRunner()
                 && isValidDir(stdWarDir())

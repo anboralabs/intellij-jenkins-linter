@@ -77,22 +77,21 @@ object LinterNotifications {
     }
 
     @JvmStatic
-    fun downloadLinterNotification(project: Project?) {
+    fun errorNotification(ex: Throwable, project: Project?) {
         val notification = createLinterNotification(
             PLUGIN_NAME,
-            "Download Jenkinsfile Linter.",
-            NotificationType.WARNING,
-            DownloadLinter()
+            "Error: ${ex.message}.",
+            NotificationType.ERROR
         )
 
         showNotification(notification, project)
     }
 
     @JvmStatic
-    fun installPipelinePluginNotification(project: Project?) {
+    fun downloadLinterNotification(project: Project?) {
         val notification = createLinterNotification(
             PLUGIN_NAME,
-            "Extract and Install Jenkinsfile Linter.",
+            "Download Jenkinsfile Linter.",
             NotificationType.WARNING,
             DownloadLinter()
         )
