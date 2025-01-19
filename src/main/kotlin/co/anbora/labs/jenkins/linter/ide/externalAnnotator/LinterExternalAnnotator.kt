@@ -2,7 +2,8 @@ package co.anbora.labs.jenkins.linter.ide.externalAnnotator
 
 import co.anbora.labs.jenkins.linter.ide.inspection.LinterInspection
 import co.anbora.labs.jenkins.linter.ide.psiFinder.PsiFinderFlavor
-import co.anbora.labs.jenkins.linter.ide.toolchain.LinterLocalToolchain
+import co.anbora.labs.jenkins.linter.ide.toolchain.JenkinsLinterToolchain
+import co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService.Companion.toolchainSettings
 import co.anbora.labs.jenkins.linter.lint.Linter
 import co.anbora.labs.jenkins.linter.lint.checker.Problem
 import co.anbora.labs.jenkinsFile.lang.JenkinsFileType
@@ -16,6 +17,7 @@ import com.intellij.psi.PsiFile
 class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, LinterExternalAnnotator.Results>() {
 
     data class State(
+        val linter: JenkinsLinterToolchain,
         val psiWithDocument: Pair<PsiFile, Document>,
     )
 
@@ -51,14 +53,16 @@ class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, 
             return null
         }
 
-        return State(Pair(file, document))
+        val toolchain = toolchainSettings.toolchain()
+
+        return State(toolchain, Pair(file, document))
     }
 
     override fun doAnnotate(collectedInfo: State?): Results {
         val psiWithDocument = collectedInfo?.psiWithDocument ?: return NO_PROBLEMS_FOUND
 
-        if (LinterLocalToolchain.isValid()) {
-            return Linter.lint(collectedInfo, LinterLocalToolchain, PsiFinderFlavor.getApplicableFlavor())
+        if (collectedInfo.linter.isValid()) {
+            return Linter.lint(collectedInfo, collectedInfo.linter, PsiFinderFlavor.getApplicableFlavor())
         }
 
         return NO_PROBLEMS_FOUND

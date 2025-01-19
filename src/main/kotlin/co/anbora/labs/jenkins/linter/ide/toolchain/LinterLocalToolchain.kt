@@ -7,12 +7,13 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.pathString
 import co.anbora.labs.jenkins.linter.zip.ZipExtractor
+import com.intellij.openapi.util.io.FileUtil
 
-object LinterLocalToolchain: JenkinsLinterToolchain {
+class LinterLocalToolchain(
+    private val root: Path,
+): JenkinsLinterToolchain {
 
-    private val root = PathManager.getConfigDir().resolve("jenkins-tools")
-
-    private const val ZIP = "tools.zip"
+    private val ZIP = "tools.zip"
 
     private val runner = root.resolve("tools")
     private val repoDir = runner.resolve("repo")
@@ -55,7 +56,7 @@ object LinterLocalToolchain: JenkinsLinterToolchain {
 
     override fun jenkinsWar(): Path = stdWarDir().resolve(version()).resolve("jenkins-war-${version()}.war")
 
-    override fun defaultPluginName(): String = "pipeline-model-definition:2.2218.v56d0cda_37c72"
+    override fun defaultPluginName(): String = "docker-workflow"
 
     override fun isValid(): Boolean {
         return isValidDir(rootDir())
@@ -114,4 +115,15 @@ object LinterLocalToolchain: JenkinsLinterToolchain {
     private fun isValidFile(config: Path?): Boolean {
         return config != null && Files.isRegularFile(config)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as JenkinsLinterToolchain
+
+        return FileUtil.comparePaths(other.homePath(), homePath()) == 0
+    }
+
+    override fun hashCode(): Int = homePath().hashCode()
 }

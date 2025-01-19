@@ -1,7 +1,7 @@
 package co.anbora.labs.jenkins.linter.ide.tasks
 
 import co.anbora.labs.jenkins.linter.ide.notifications.LinterNotifications
-import co.anbora.labs.jenkins.linter.ide.toolchain.LinterLocalToolchain
+import co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService.Companion.toolchainSettings
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
@@ -27,6 +27,7 @@ class DownloadLinterTask(
     private val dlFilePath: Path,
     private val explodeWarPath: Path
 ): Task.Backgroundable(project, "Download jenkinsfile linter", false) {
+
     override fun run(progressIndicator: ProgressIndicator) {
         try {
             val url = String.format("https://updates.jenkins.io/download/war/%s/jenkins.war", jenkinsVersion)
@@ -107,10 +108,12 @@ class DownloadLinterTask(
     private fun installPlugins(dlFilePath: Path, progressIndicator: ProgressIndicator) {
         val pluginParser = PluginListParser(false)
 
+        val toolchain = toolchainSettings.toolchain()
+
         val config = Config.builder()
-            .withPluginDir(LinterLocalToolchain.stdPluginsDir().toFile())
+            .withPluginDir(toolchain.stdPluginsDir().toFile())
             .withJenkinsWar(dlFilePath.pathString)
-            .withPlugins(ArrayList(pluginParser.parsePluginsFromCliOption(arrayOf(LinterLocalToolchain.defaultPluginName()))))
+            .withPlugins(ArrayList(pluginParser.parsePluginsFromCliOption(arrayOf(toolchain.defaultPluginName()))))
             .withDoDownload(true)
             .withProgressIndicator(progressIndicator)
             .build()

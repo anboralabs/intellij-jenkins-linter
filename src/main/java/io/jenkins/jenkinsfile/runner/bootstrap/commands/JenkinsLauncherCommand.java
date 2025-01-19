@@ -1,6 +1,6 @@
 package io.jenkins.jenkinsfile.runner.bootstrap.commands;
 
-import co.anbora.labs.jenkins.linter.ide.toolchain.LinterLocalToolchain;
+import co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
@@ -10,7 +10,6 @@ import io.jenkins.jenkinsfile.runner.bootstrap.ClassLoaderBuilder;
 import io.jenkins.jenkinsfile.runner.bootstrap.IApp;
 import io.jenkins.jenkinsfile.runner.bootstrap.SideClassLoader;
 import io.jenkins.jenkinsfile.runner.bootstrap.Util;
-import io.jenkins.tools.pluginmanager.impl.PluginManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
@@ -76,7 +75,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     /**
      * Directory used as cache for downloaded artifacts.
      */
-    private File cache = LinterLocalToolchain.INSTANCE.rootDir().toFile();
+    private File cache = LinterToolchainService.Companion.getToolchainSettings().toolchain().rootDir().toFile();
 
     @SuppressFBWarnings("DM_EXIT")
     public void postConstruct() throws IOException {
@@ -286,7 +285,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     }
 
     public File getSetupJarDir() throws IOException {
-        File setupJar = LinterLocalToolchain.INSTANCE.libSetupDir().toFile();
+        File setupJar = LinterToolchainService.Companion.getToolchainSettings().toolchain().libSetupDir().toFile();
         if (!setupJar.exists()) {
             throw new IOException("Setup JAR is missing: " + setupJar);
         }
@@ -294,7 +293,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     }
 
     public File getPayloadJarDir() throws IOException {
-        File payloadJar = LinterLocalToolchain.INSTANCE.libPayloadDir().toFile();
+        File payloadJar = LinterToolchainService.Companion.getToolchainSettings().toolchain().libPayloadDir().toFile();
         if (!payloadJar.exists()) {
             throw new IOException("Payload JAR is missing: " + payloadJar);
         }

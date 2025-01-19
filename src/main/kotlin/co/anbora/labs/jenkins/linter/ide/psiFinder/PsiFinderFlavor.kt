@@ -3,7 +3,6 @@ package co.anbora.labs.jenkins.linter.ide.psiFinder
 import co.anbora.labs.jenkins.linter.lint.issue.Issue
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.extensions.ExtensionPointName
-import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 

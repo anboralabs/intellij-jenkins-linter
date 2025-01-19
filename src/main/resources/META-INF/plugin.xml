@@ -13,6 +13,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
 
+        <applicationService serviceImplementation="co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService"/>
         <postStartupActivity implementation="co.anbora.labs.jenkins.linter.ide.startup.SetupLinterStartup" />
         <notificationGroup id="JenkinsOfflineLinter_Notification" displayType="STICKY_BALLOON"/>
     </extensions>

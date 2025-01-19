@@ -1,7 +1,7 @@
 package co.anbora.labs.jenkins.linter.ide.startup
 
 import co.anbora.labs.jenkins.linter.ide.notifications.LinterNotifications
-import co.anbora.labs.jenkins.linter.ide.toolchain.LinterLocalToolchain
+import co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService.Companion.toolchainSettings
 import co.anbora.labs.jenkins.linter.license.CheckLicense
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
@@ -14,11 +14,13 @@ class SetupLinterStartup: ProjectActivity {
             LinterNotifications.supportNotification(project)
         }
 
-        if (!LinterLocalToolchain.isValidSetup()) {
-            LinterLocalToolchain.setup(project)
+        val toolchain = toolchainSettings.toolchain()
+
+        if (!toolchain.isValidSetup()) {
+            toolchain.setup(project)
         }
 
-        if (!LinterLocalToolchain.isValid()) {
+        if (!toolchain.isValid()) {
             LinterNotifications.downloadLinterNotification(project)
         }
     }
