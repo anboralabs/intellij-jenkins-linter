@@ -1,7 +1,7 @@
 package co.anbora.labs.jenkins.linter.ide.externalAnnotator
 
 import co.anbora.labs.jenkins.linter.ide.inspection.LinterInspection
-import co.anbora.labs.jenkins.linter.ide.psiFinder.PsiFinderFlavor
+import co.anbora.labs.jenkins.linter.ide.psi.finder.PsiFinderFlavor
 import co.anbora.labs.jenkins.linter.ide.toolchain.JenkinsLinterToolchain
 import co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService.Companion.toolchainSettings
 import co.anbora.labs.jenkins.linter.lint.Linter

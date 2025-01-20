@@ -19,11 +19,11 @@
     </extensions>
 
     <extensions defaultExtensionNs="co.anbora.labs.jenkinsfile.linter">
-        <elementFinder implementation="co.anbora.labs.jenkins.linter.ide.psiFinder.DefaultPsiElementFinder" />
+        <elementFinder implementation="co.anbora.labs.jenkins.linter.ide.psi.finder.DefaultPsiElementFinder" />
     </extensions>
 
     <extensionPoints>
-        <extensionPoint interface="co.anbora.labs.jenkins.linter.ide.psiFinder.PsiFinderFlavor"
+        <extensionPoint interface="co.anbora.labs.jenkins.linter.ide.psi.finder.PsiFinderFlavor"
                         dynamic="true" name="elementFinder"/>
     </extensionPoints>
 

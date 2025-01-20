@@ -1,7 +1,7 @@
 package co.anbora.labs.jenkins.linter.lint
 
 import co.anbora.labs.jenkins.linter.ide.externalAnnotator.LinterExternalAnnotator
-import co.anbora.labs.jenkins.linter.ide.psiFinder.PsiFinderFlavor
+import co.anbora.labs.jenkins.linter.ide.psi.finder.PsiFinderFlavor
 import co.anbora.labs.jenkins.linter.ide.toolchain.JenkinsLinterToolchain
 import co.anbora.labs.jenkins.linter.lint.checker.ScanFiles
 import com.intellij.openapi.diagnostic.Logger

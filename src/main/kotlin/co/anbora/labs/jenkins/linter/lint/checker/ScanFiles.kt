@@ -1,7 +1,7 @@
 package co.anbora.labs.jenkins.linter.lint.checker
 
 import co.anbora.labs.jenkins.linter.ide.notifications.LinterNotifications
-import co.anbora.labs.jenkins.linter.ide.psiFinder.PsiFinderFlavor
+import co.anbora.labs.jenkins.linter.ide.psi.finder.PsiFinderFlavor
 import co.anbora.labs.jenkins.linter.ide.toolchain.JenkinsLinterToolchain
 import co.anbora.labs.jenkins.linter.lint.exception.LinterException
 import co.anbora.labs.jenkins.linter.lint.issue.Issue

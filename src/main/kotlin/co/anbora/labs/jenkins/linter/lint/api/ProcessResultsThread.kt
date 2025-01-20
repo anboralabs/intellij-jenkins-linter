@@ -1,6 +1,6 @@
 package co.anbora.labs.jenkins.linter.lint.api
 
-import co.anbora.labs.jenkins.linter.ide.psiFinder.PsiFinderFlavor
+import co.anbora.labs.jenkins.linter.ide.psi.finder.PsiFinderFlavor
 import co.anbora.labs.jenkins.linter.lint.checker.Problem
 import co.anbora.labs.jenkins.linter.lint.issue.Issue
 import co.anbora.labs.jenkins.linter.lint.checker.PsiProblem

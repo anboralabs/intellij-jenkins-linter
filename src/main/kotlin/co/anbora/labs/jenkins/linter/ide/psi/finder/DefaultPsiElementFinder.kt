@@ -1,4 +1,4 @@
-package co.anbora.labs.jenkins.linter.ide.psiFinder
+package co.anbora.labs.jenkins.linter.ide.psi.finder
 
 import co.anbora.labs.jenkins.linter.lint.issue.Issue
 import com.intellij.openapi.editor.Document
