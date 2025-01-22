@@ -15,6 +15,7 @@ import io.jenkins.tools.pluginmanager.parsers.TxtOutputConverter;
 import io.jenkins.tools.pluginmanager.parsers.YamlPluginOutputConverter;
 import io.jenkins.tools.pluginmanager.util.FileDownloadResponseHandler;
 import io.jenkins.tools.pluginmanager.util.ManifestTools;
+import io.jenkins.tools.pluginmanager.util.PluginManagerUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -56,7 +57,6 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.jenkins.tools.pluginmanager.util.PluginManagerUtils.*;
 
 public class PluginManager implements Closeable {
     private static final VersionNumber LATEST = new VersionNumber(Plugin.LATEST);
@@ -818,7 +818,7 @@ public class PluginManager implements Closeable {
             } else {
                 response = IOUtils.toString(url, StandardCharsets.UTF_8);
             }
-            String result = removePossibleWrapperText(response);
+            String result = PluginManagerUtils.removePossibleWrapperText(response);
             JSONObject json = new JSONObject(result);
             cm.addToCache(cacheKey, json);
             return json;
@@ -1230,20 +1230,20 @@ public class PluginManager implements Closeable {
         if (StringUtils.isNotEmpty(pluginUrl)) {
             urlString = pluginUrl;
         } else if (StringUtils.isNotEmpty(jenkinsUcDownloadUrl)) {
-            urlString = appendPathOntoUrl(jenkinsUcDownloadUrl, pluginName, pluginVersion, pluginName + ".hpi");
+            urlString = PluginManagerUtils.appendPathOntoUrl(jenkinsUcDownloadUrl, pluginName, pluginVersion, pluginName + ".hpi");
         } else if (pluginVersion.equals(Plugin.LATEST) && !StringUtils.isEmpty(jenkinsUcLatest)) {
-            urlString = appendPathOntoUrl(dirName(jenkinsUcLatest), "/latest", pluginName + ".hpi");
+            urlString = PluginManagerUtils.appendPathOntoUrl(PluginManagerUtils.dirName(jenkinsUcLatest), "/latest", pluginName + ".hpi");
         } else if (pluginVersion.equals(Plugin.EXPERIMENTAL)) {
-            urlString = appendPathOntoUrl(dirName(cfg.getJenkinsUcExperimental()), "/latest", pluginName + ".hpi");
+            urlString = PluginManagerUtils.appendPathOntoUrl(PluginManagerUtils.dirName(cfg.getJenkinsUcExperimental()), "/latest", pluginName + ".hpi");
         } else if (!StringUtils.isEmpty(plugin.getGroupId())) {
             String groupId = plugin.getGroupId();
             groupId = groupId.replace(".", "/");
             String incrementalsVersionPath = String.format("%s/%s/%s-%s.hpi", pluginName, pluginVersion, pluginName, pluginVersion);
-            urlString = appendPathOntoUrl(cfg.getJenkinsIncrementalsRepoMirror(), groupId, incrementalsVersionPath);
+            urlString = PluginManagerUtils.appendPathOntoUrl(cfg.getJenkinsIncrementalsRepoMirror(), groupId, incrementalsVersionPath);
         } else if (StringUtils.isNotEmpty(jenkinsUcDownload)) {
-            urlString = appendPathOntoUrl(jenkinsUcDownload, "/plugins", pluginName, pluginVersion, pluginName + ".hpi");
+            urlString = PluginManagerUtils.appendPathOntoUrl(jenkinsUcDownload, "/plugins", pluginName, pluginVersion, pluginName + ".hpi");
         } else {
-            urlString = appendPathOntoUrl(removePath(cfg.getJenkinsUc()), "/download/plugins", pluginName, pluginVersion, pluginName + ".hpi");
+            urlString = PluginManagerUtils.appendPathOntoUrl(PluginManagerUtils.removePath(cfg.getJenkinsUc()), "/download/plugins", pluginName, pluginVersion, pluginName + ".hpi");
         }
         logVerbose(String.format("Will use url: %s to download %s plugin", urlString, plugin.getName()));
         return urlString;
@@ -1292,7 +1292,7 @@ public class PluginManager implements Closeable {
             if (!success && !urlString.startsWith(MIRROR_FALLBACK_BASE_URL)) {
                 logMessage("Downloading from mirrors failed, falling back to " + MIRROR_FALLBACK_BASE_URL);
                 // as fallback try to directly download from Jenkins server (only if mirrors fail)
-                urlString = appendPathOntoUrl(MIRROR_FALLBACK_BASE_URL, "/plugins", plugin.getName(), plugin.getVersion(), plugin.getName() + ".hpi");
+                urlString = PluginManagerUtils.appendPathOntoUrl(MIRROR_FALLBACK_BASE_URL, "/plugins", plugin.getName(), plugin.getVersion(), plugin.getName() + ".hpi");
                 return downloadToFile(urlString, plugin, fileLocation, 1);
             }
         } else if (urlString.startsWith("file://")){

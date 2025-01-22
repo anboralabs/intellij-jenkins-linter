@@ -1,8 +1,5 @@
 package io.jenkins.jenkinsfile.runner.bootstrap.commands;
 
-import co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.extensions.PluginId;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -27,7 +24,6 @@ import java.nio.file.Files;
 import java.security.PrivilegedActionException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -71,11 +67,6 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
             throw new RuntimeException("Unhandled exception", ex);
         }
     }
-
-    /**
-     * Directory used as cache for downloaded artifacts.
-     */
-    private File cache = LinterToolchainService.Companion.getToolchainSettings().toolchain().rootDir().toFile();
 
     @SuppressFBWarnings("DM_EXIT")
     public void postConstruct() throws IOException {
@@ -153,7 +144,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
         if (requiredVersion == null) {
             System.out.println("No explicit version has been selected, using latest LTS");
 
-            File latestCore = new File(cache, "war/latest.txt");
+            File latestCore = new File(getLauncherOptions().cache.toFile(), "war/latest.txt");
             latestCore.getParentFile().mkdirs();
             // Check once a day
             if (!latestCore.exists() || latestCore.lastModified() < CACHE_EXPIRE) {
@@ -166,7 +157,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
         System.out.printf("Running pipeline on jenkins %s%n", versionToUse);
 
-        File war = new File(cache, String.format("war/%s/jenkins-war-%s.war", versionToUse, versionToUse));
+        File war = new File(getLauncherOptions().cache.toFile(), String.format("war/%s/jenkins-war-%s.war", versionToUse, versionToUse));
         if (!war.exists()) {
             war.getParentFile().mkdirs();
             final URL url = new URL(getLauncherOptions().getMirrorURL(String.format("http://updates.jenkins.io/download/war/%s/jenkins.war", versionToUse)));
@@ -179,7 +170,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
 
     private void installPlugin(File pluginsDir, String shortname, String version) throws IOException {
         final File install = new File(pluginsDir, shortname + ".jpi");
-        File plugin = new File(cache, String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version));
+        File plugin = new File(getLauncherOptions().cache.toFile(), String.format("plugins/%s/%s-%s.hpi", shortname, shortname, version));
         if (!plugin.exists() || ("latest".equals(version) && plugin.lastModified() < CACHE_EXPIRE) ) {
             plugin.getParentFile().mkdirs();
             final URL url = new URL(getLauncherOptions().getMirrorURL(String.format("https://updates.jenkins.io/download/plugins/%s/%s/%s.hpi", shortname, version, shortname)));
@@ -268,8 +259,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
      * @return Path to the app repo
      */
     public File getAppRepo() {
-        PluginId pluginId = PluginId.getId("co.anbora.labs.jenkinsfile.linter");
-        return Objects.requireNonNull(PluginManagerCore.getPlugin(pluginId)).getPluginPath().toFile();
+        return getLauncherOptions().pluginPath.toFile();
     }
 
     /**
@@ -285,7 +275,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     }
 
     public File getSetupJarDir() throws IOException {
-        File setupJar = LinterToolchainService.Companion.getToolchainSettings().toolchain().libSetupDir().toFile();
+        File setupJar = getLauncherOptions().setupDir.toFile();
         if (!setupJar.exists()) {
             throw new IOException("Setup JAR is missing: " + setupJar);
         }
@@ -293,7 +283,7 @@ public abstract class JenkinsLauncherCommand implements Callable<Integer> {
     }
 
     public File getPayloadJarDir() throws IOException {
-        File payloadJar = LinterToolchainService.Companion.getToolchainSettings().toolchain().libPayloadDir().toFile();
+        File payloadJar = getLauncherOptions().payloadDir.toFile();
         if (!payloadJar.exists()) {
             throw new IOException("Payload JAR is missing: " + payloadJar);
         }

@@ -4,12 +4,25 @@ import edu.umd.cs.findbugs.annotations.CheckForNull;
 import picocli.CommandLine;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Arguments needed to launch a Jenkins instance.
  * @see JenkinsLauncherCommand
  */
 public class JenkinsLauncherOptions {
+
+    public Path cache;
+    public Path pluginPath;
+    public Path payloadDir;
+    public Path setupDir;
+
+    public JenkinsLauncherOptions(Path cache, Path pluginPath, Path payloadDir, Path setupDir) {
+        this.cache = cache;
+        this.pluginPath = pluginPath;
+        this.payloadDir = payloadDir;
+        this.setupDir = setupDir;
+    }
 
     /**
      * Exploded jenkins.war
