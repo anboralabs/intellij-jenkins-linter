@@ -64,7 +64,7 @@ class ProcessResultsThread(
             addProblem(
                 psiFile,
                 PsiProblem(
-                    "Error: ${event.message}, Hint: ${event.hint}",
+                    "Error: ${event.message}",
                     psiElement,
                     HighlightSeverity.ERROR,
                     null

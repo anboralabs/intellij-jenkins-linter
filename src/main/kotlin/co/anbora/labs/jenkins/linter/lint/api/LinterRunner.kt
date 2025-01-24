@@ -31,11 +31,17 @@ object LinterRunner {
         }
 
         val oldOut = System.out
+        val oldErr = System.err
 
         val listOutput = ListOutputStream()
         val newOut = PrintStream(listOutput)
 
         System.setOut(newOut)
+
+        val listErrorOutput = ListOutputStream()
+        val newErrorOut = PrintStream(listErrorOutput)
+
+        System.setErr(newErrorOut)
 
         val fileName = filesToScan.first()
 
@@ -61,10 +67,14 @@ object LinterRunner {
         command.call()
 
         newOut.flush()
+        newErrorOut.flush()
+
         val messages = listOutput.getMessages()
+        val messagesError = listErrorOutput.getMessages()
 
         System.setOut(oldOut)
+        System.setErr(oldErr)
 
-        return IssueMapper.apply(fileName, messages)
+        return IssueMapper.apply(fileName, messages + messagesError)
     }
 }
