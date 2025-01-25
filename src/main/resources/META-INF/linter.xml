@@ -8,7 +8,7 @@
                          language="Jenkinsfile"
                          shortName="JenkinsfileLinter"
                          id="co.anbora.labs.jenkins.linter.ide.inspection.LinterInspection"
-                         level="WEAK WARNING"
+                         level="ERROR"
                          enabledByDefault="true"
                          displayName="Jenkinsfile lint"
                          key="inspection.display-name"
