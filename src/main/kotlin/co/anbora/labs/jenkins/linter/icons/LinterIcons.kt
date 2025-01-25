@@ -5,6 +5,7 @@ import javax.swing.Icon
 
 object LinterIcons {
 
+    val FILE = getIcon("file.svg")
     val NOTIFICATION = getIcon("notification.svg")
 
     private fun getIcon(path: String): Icon {

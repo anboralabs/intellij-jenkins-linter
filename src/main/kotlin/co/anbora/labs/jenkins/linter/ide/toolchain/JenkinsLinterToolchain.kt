@@ -28,8 +28,6 @@ interface JenkinsLinterToolchain {
     fun hasWarDownloaded(): Boolean
     fun setup(project: Project)
 
-
-
     companion object {
         fun fromPath(homePath: String): JenkinsLinterToolchain {
             if (homePath == "") {

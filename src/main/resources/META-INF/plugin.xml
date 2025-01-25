@@ -13,7 +13,15 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
 
+        <projectConfigurable
+                groupId="tools"
+                displayName="Jenkins Linter Offline"
+                id="preference.NewJenkinsLinterOfflineHomeConfigurable"
+                instance="co.anbora.labs.jenkins.linter.ide.settings.JenkinsLinterSettingsConfigurable" />
+
         <applicationService serviceImplementation="co.anbora.labs.jenkins.linter.ide.toolchain.LinterToolchainService"/>
+        <applicationService serviceImplementation="co.anbora.labs.jenkins.linter.ide.toolchain.LinterKnownToolchainService"/>
+
         <postStartupActivity implementation="co.anbora.labs.jenkins.linter.ide.startup.SetupLinterStartup" />
         <notificationGroup id="JenkinsOfflineLinter_Notification" displayType="STICKY_BALLOON"/>
     </extensions>

@@ -13,6 +13,11 @@ class DownloadLinter: NotificationAction("Download") {
 
         val toolchain = toolchainSettings.toolchain()
 
+        if (toolchain.isValid()) {
+            notification.expire()
+            return
+        }
+
         DownloadLinterTask(
             project,
             toolchain.version(),
