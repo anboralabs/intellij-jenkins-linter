@@ -13,7 +13,6 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.psi.PsiFile
-import fleet.util.AtomicRef
 import java.util.concurrent.atomic.AtomicBoolean
 
 class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, LinterExternalAnnotator.Results>() {
@@ -34,7 +33,6 @@ class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, 
     }
 
     private val executionReference = AtomicBoolean(false)
-    private val resultReference = AtomicRef(NO_PROBLEMS_FOUND)
 
     override fun getPairedBatchInspectionShortName(): String = LinterInspection.INSPECTION_SHORT_NAME
 
@@ -75,7 +73,6 @@ class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, 
             executionReference.set(true)
             log.debug("Executing linter instance")
             val result = Linter.lint(collectedInfo, collectedInfo.linter, PsiFinderFlavor.getApplicableFlavor())
-            resultReference.set(result)
             executionReference.set(false)
             return result
         }
