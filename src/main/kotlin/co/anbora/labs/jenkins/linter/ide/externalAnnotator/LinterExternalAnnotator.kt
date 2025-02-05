@@ -13,6 +13,8 @@ import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.psi.PsiFile
+import fleet.util.AtomicRef
+import java.util.concurrent.atomic.AtomicBoolean
 
 class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, LinterExternalAnnotator.Results>() {
 
@@ -30,6 +32,9 @@ class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, 
     companion object {
         val NO_PROBLEMS_FOUND: Results = Results(emptyList())
     }
+
+    private val executionReference = AtomicBoolean(false)
+    private val resultReference = AtomicRef(NO_PROBLEMS_FOUND)
 
     override fun getPairedBatchInspectionShortName(): String = LinterInspection.INSPECTION_SHORT_NAME
 
@@ -55,14 +60,24 @@ class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, 
 
         val toolchain = toolchainSettings.toolchain()
 
+        if (executionReference.get()) {
+            log.debug("Linter instance process is running before")
+            return null
+        }
+
         return State(toolchain, Pair(file, document))
     }
 
     override fun doAnnotate(collectedInfo: State?): Results {
         val psiWithDocument = collectedInfo?.psiWithDocument ?: return NO_PROBLEMS_FOUND
 
-        if (collectedInfo.linter.isValid()) {
-            return Linter.lint(collectedInfo, collectedInfo.linter, PsiFinderFlavor.getApplicableFlavor())
+        if (collectedInfo.linter.isValid() && !executionReference.get()) {
+            executionReference.set(true)
+            log.debug("Executing linter instance")
+            val result = Linter.lint(collectedInfo, collectedInfo.linter, PsiFinderFlavor.getApplicableFlavor())
+            resultReference.set(result)
+            executionReference.set(false)
+            return result
         }
 
         return NO_PROBLEMS_FOUND
