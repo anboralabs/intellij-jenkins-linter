@@ -15,7 +15,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.psi.PsiFile
 import java.util.concurrent.atomic.AtomicBoolean
 
-class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, LinterExternalAnnotator.Results>() {
+object LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, LinterExternalAnnotator.Results>() {
 
     data class State(
         val linter: JenkinsLinterToolchain,
@@ -28,9 +28,7 @@ class LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State, 
         LinterExternalAnnotator::class.java
     )
 
-    companion object {
-        val NO_PROBLEMS_FOUND: Results = Results(emptyList())
-    }
+    val NO_PROBLEMS_FOUND: Results = Results(emptyList())
 
     private val executionReference = AtomicBoolean(false)
 
