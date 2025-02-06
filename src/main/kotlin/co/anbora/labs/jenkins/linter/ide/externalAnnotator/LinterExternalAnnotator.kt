@@ -67,8 +67,7 @@ object LinterExternalAnnotator: ExternalAnnotator<LinterExternalAnnotator.State,
     override fun doAnnotate(collectedInfo: State?): Results {
         val psiWithDocument = collectedInfo?.psiWithDocument ?: return NO_PROBLEMS_FOUND
 
-        if (collectedInfo.linter.isValid() && !executionReference.get()) {
-            executionReference.set(true)
+        if (collectedInfo.linter.isValid() && executionReference.compareAndSet(false, true)) {
             log.debug("Executing linter instance")
             val result = Linter.lint(collectedInfo, collectedInfo.linter, PsiFinderFlavor.getApplicableFlavor())
             executionReference.set(false)
