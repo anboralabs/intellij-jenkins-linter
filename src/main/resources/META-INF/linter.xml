@@ -3,7 +3,7 @@
     <resource-bundle>messages.Jenkinslinter</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <externalAnnotator language="Jenkinsfile" implementationClass="co.anbora.labs.jenkins.linter.ide.externalAnnotator.LinterExternalAnnotator"/>
+        <externalAnnotator language="Jenkinsfile" implementationClass="co.anbora.labs.jenkins.linter.ide.externalAnnotator.ExternalAnnotator"/>
         <localInspection implementationClass="co.anbora.labs.jenkins.linter.ide.inspection.LinterInspection"
                          language="Jenkinsfile"
                          shortName="JenkinsfileLinter"

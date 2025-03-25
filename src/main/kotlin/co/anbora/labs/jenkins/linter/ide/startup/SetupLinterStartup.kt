@@ -11,6 +11,7 @@ class SetupLinterStartup: ProjectActivity {
         val licensed = CheckLicense.isLicensed() ?: false
 
         if (!licensed) {
+            CheckLicense.requestLicense("Support Plugin")
             LinterNotifications.supportNotification(project)
         }
 

@@ -1,5 +1,9 @@
 package co.anbora.labs.jenkins.linter.license;
 
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.ui.LicensingFacade;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -121,12 +125,12 @@ public class CheckLicense {
     return false;
   }
 
-  /* public static void requestLicense(final String message) {
+  public static void requestLicense(final String message) {
     // ensure the dialog is appeared from UI thread and in a non-modal context
     ApplicationManager.getApplication().invokeLater(() -> showRegisterDialog(PRODUCT_CODE, message), ModalityState.nonModal());
-  } */
+  }
   
-  /*private static void showRegisterDialog(final String productCode, final String message) {
+  private static void showRegisterDialog(final String productCode, final String message) {
     final com.intellij.openapi.actionSystem.ActionManager actionManager = com.intellij.openapi.actionSystem.ActionManager.getInstance();
     // first, assume we are running inside the opensource version
     AnAction registerAction = actionManager.getAction("RegisterPlugins");
@@ -135,15 +139,17 @@ public class CheckLicense {
       registerAction = actionManager.getAction("Register");
     }
     if (registerAction != null) {
-      registerAction.actionPerformed(AnActionEvent.createFromDataContext("", new Presentation(), asDataContext(productCode, message)));
+      ActionUtil.performActionDumbAwareWithCallbacks(registerAction, AnActionEvent.createEvent(
+              asDataContext(productCode, message), new Presentation(), "",
+              ActionUiKind.NONE, null));
     }
-  }*/
+  }
 
   // This creates a DataContext providing additional information for the license UI
   // The "Register*" actions show the registration dialog and expect to find this additional data in the DataContext passed to the action
   // - productCode: the product corresponding to the passed productCode will be pre-selected in the opened dialog
   // - message: optional message explaining the reason why the dialog has been shown
-  /*@NotNull
+  @NotNull
   private static DataContext asDataContext(final String productCode, @Nullable String message) {
     return dataId -> switch (dataId) {
         // the same code as registered in plugin.xml, 'product-descriptor' tag
@@ -153,7 +159,7 @@ public class CheckLicense {
         case "register.message" -> message;
         default -> null;
     };
-  }*/
+  }
 
   private static boolean isEvaluationValid(String expirationTime) {
     try {
