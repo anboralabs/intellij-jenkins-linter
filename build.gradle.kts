@@ -3,8 +3,8 @@ fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.24"
-    id("org.jetbrains.intellij.platform") version "2.2.1"
+    id("org.jetbrains.kotlin.jvm") version "2.0.0"
+    id("org.jetbrains.intellij.platform") version "2.4.0"
 }
 
 group = properties("pluginGroup").get()
@@ -18,7 +18,8 @@ kotlin {
 // Configure project's dependencies
 repositories {
     mavenCentral()
-
+    maven("https://repo.jenkins-ci.org/public/")
+    maven { url = uri("https://jitpack.io") }
     // IntelliJ Platform Gradle Plugin Repositories Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-repositories-extension.html
     intellijPlatform {
         defaultRepositories()
@@ -36,10 +37,18 @@ dependencies {
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(properties("platformPlugins").map { it.split(',') })
 
-        instrumentationTools()
         pluginVerifier()
         // testFramework(TestFrameworkType.Platform.JUnit4)
     }
+    implementation(project(":jenkinsfile-runner"))
+    implementation(project(":plugin-installation-manager-tool"))
+    implementation("commons-io:commons-io:2.18.0")
+    implementation("org.jenkins-ci:version-number:1.12")
+    implementation("com.github.spotbugs:spotbugs-annotations:3.1.3")
+    implementation("args4j:args4j:2.37")
+    implementation("org.apache.commons:commons-lang3:3.17.0")
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
+    implementation("org.json:json:20241224")
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
@@ -63,7 +72,7 @@ intellijPlatform {
         channels = properties("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 
-    verifyPlugin {
+    pluginVerification {
         ides {
             recommended()
         }

@@ -1,0 +1,18 @@
+<!--suppress PluginXmlValidity -->
+<idea-plugin>
+    <resource-bundle>messages.Jenkinslinter</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <externalAnnotator language="Jenkinsfile" implementationClass="co.anbora.labs.jenkins.linter.ide.externalAnnotator.ExternalAnnotator"/>
+        <localInspection implementationClass="co.anbora.labs.jenkins.linter.ide.inspection.LinterInspection"
+                         language="Jenkinsfile"
+                         shortName="JenkinsfileLinter"
+                         id="co.anbora.labs.jenkins.linter.ide.inspection.LinterInspection"
+                         level="ERROR"
+                         enabledByDefault="true"
+                         displayName="Jenkinsfile lint"
+                         key="inspection.display-name"
+                         groupKey="inspection.group"/>
+    </extensions>
+
+</idea-plugin>
