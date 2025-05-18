@@ -3,7 +3,7 @@
     <id>co.anbora.labs.jenkinsfile.linter</id>
     <name>Jenkinsfile Linter Offline</name>
     <vendor email="support@anbora.co" url="https://labs.anbora.co">Anbora-labs</vendor>
-    <product-descriptor code="PJENKINSLINTER" release-date="20250116" release-version="10"/>
+    <product-descriptor code="PJENKINSLINTER" release-date="20250517" release-version="11"/>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
