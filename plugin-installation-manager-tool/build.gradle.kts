@@ -21,7 +21,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("commons-validator:commons-validator:1.9.0")
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
-    implementation("commons-codec:commons-codec:1.17.1")
+    implementation("commons-codec:commons-codec:1.21.0")
     implementation("org.json:json:20241224")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
 }
