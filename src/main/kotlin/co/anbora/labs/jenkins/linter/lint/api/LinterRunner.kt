@@ -6,7 +6,7 @@ import co.anbora.labs.jenkins.linter.lint.console.ListOutputStream
 import co.anbora.labs.jenkins.linter.lint.exception.LinterException
 import co.anbora.labs.jenkins.linter.lint.issue.Issue
 import co.anbora.labs.jenkins.linter.lint.issue.IssueMapper
-import com.intellij.ide.plugins.PluginManagerCore.getPlugin
+import com.intellij.ide.plugins.PluginManager
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.Project
 import io.jenkins.jenkinsfile.runner.bootstrap.commands.JenkinsLauncherOptions
@@ -50,7 +50,7 @@ object LinterRunner {
         pipelineLintOptions.jenkinsfile = Paths.get(fileName).toFile()
 
         val pluginId = PluginId.getId("co.anbora.labs.jenkinsfile.linter")
-        val pluginPath = getPlugin(pluginId)?.pluginPath ?: throw LinterException("Reinstall the plugin, invalid path")
+        val pluginPath = PluginManager.getInstance().findEnabledPlugin(pluginId)?.pluginPath ?: throw LinterException("Reinstall the plugin, invalid path")
 
         val launcherOptions = JenkinsLauncherOptions(
             toolchainSettings.toolchain().rootDir(),
