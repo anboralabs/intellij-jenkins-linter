@@ -30,7 +30,7 @@ class LinterLocalToolchain(
 
     override fun name(): String = "jenkins-runner"
 
-    override fun version(): String = "2.426.3"
+    override fun version(): String = "2.452.4"
 
     override fun stdRepoDir(): Path = repoDir
 
@@ -56,7 +56,7 @@ class LinterLocalToolchain(
 
     override fun jenkinsWar(): Path = stdWarDir().resolve(version()).resolve("jenkins-war-${version()}.war")
 
-    override fun defaultPluginName(): String = "docker-workflow"
+    override fun defaultPluginName(): String = "docker-workflow:592.v1001d948426c"
 
     override fun isValid(): Boolean {
         return isValidDir(rootDir())
