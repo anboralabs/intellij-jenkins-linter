@@ -19,7 +19,7 @@ dependencies {
     implementation("org.assertj:assertj-core:3.27.2")
     implementation("net.bytebuddy:byte-buddy:1.15.11")
     implementation("org.apache.commons:commons-lang3:3.17.0")
-    implementation("commons-validator:commons-validator:1.9.0")
+    implementation("commons-validator:commons-validator:1.10.1")
     implementation("org.apache.httpcomponents:httpclient:4.5.14")
     implementation("commons-codec:commons-codec:1.17.1")
     implementation("org.json:json:20241224")
